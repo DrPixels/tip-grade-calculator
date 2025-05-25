@@ -159,8 +159,12 @@ function App() {
                 point
               </p>
               <div className="px-2 py-2 rounded-sm bg-base-100">
-                <p className="text-sm font-bold">--- indicates that the required grade is not achievable.</p>
-                <p className="text-sm font-bold">MGP stands for Maximum Grade Percentage achievable.</p>
+                <p className="text-sm font-bold">
+                  --- <span className="font-normal">indicates that the required grade is not achievable.</span>
+                </p>
+                <p className="text-sm font-bold">
+                  MGP <span className="font-normal">stands for Maximum Grade Percentage achievable.</span>
+                </p>
               </div>
             </div>
 
