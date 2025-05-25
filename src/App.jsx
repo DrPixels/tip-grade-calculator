@@ -5,10 +5,20 @@ function App() {
   const [midtermGrade, setMidtermGrade] = useState(0);
   const [finalCSGrade, setFinalCSGrade] = useState(0);
   const [gradeNeededMatrix, setGradeNeededMatrix] = useState(null);
+  const [itemsNum, setItemsNum] = useState(50);
+
+  //For computing the maximum grade achievable
+  const [maxGradeAch, setMaxGradeAch] = useState(0);
+  const [maxGradeNeeded, setMaxGradeNeeded] = useState(0);
   const handleComputeGradeNeeded = (e, targetGrade) => {
     e.preventDefault();
 
     computeGradeNeedMatrix();
+    computeMaximumGrade();
+  };
+
+  const computeExamItemsNeeded = (percentage) => {
+    return Math.ceil((percentage / 100) * itemsNum);
   };
 
   const computeGradeNeeded = (targetGrade) => {
@@ -16,9 +26,12 @@ function App() {
   };
 
   const computeMaximumGrade = () => {
-    console.log(midtermGrade);
-    console.log(finalCSGrade);
-    return (100 + Number(midtermGrade) + Number(finalCSGrade)) / 3;
+    if (midtermGrade > 100 || midtermGrade < 0 || finalCSGrade > 100 || finalCSGrade < 0) return;
+    const value = (100 + Number(midtermGrade) + Number(finalCSGrade)) / 3;
+    setMaxGradeAch(value);
+
+    const maxGradeNeeded = 3 * value - midtermGrade - finalCSGrade;
+    setMaxGradeNeeded(maxGradeNeeded);
   };
 
   const computeGradeNeedMatrix = () => {
@@ -77,8 +90,6 @@ function App() {
 
       computedGradeMatrix[key]["min"] = computeGradeNeeded(minGrade);
       computedGradeMatrix[key]["max"] = computeGradeNeeded(maxGrade);
-      const gradeText = key.slice(1);
-      console.log(`${gradeText}: ${computedGradeMatrix[key]["min"]} - ${computedGradeMatrix[key]["max"]}`);
     }
 
     setGradeNeededMatrix(computedGradeMatrix);
@@ -137,13 +148,20 @@ function App() {
       <div className="max-w-3xl mx-auto bg-base-200 mt-4 pb-1 rounded-lg">
         <form onSubmit={(e) => handleComputeGradeNeeded(e, 50)}>
           <div>
-            <div className="mb-8 bg-base-300 p-4 rounded-lg flex flex-col gap-2">
-              <h2 className="text-3xl font-bold">Grade Calculator</h2>
+            <div className="mb-2 bg-base-300 p-4 rounded-lg flex flex-col gap-2">
+              <div>
+                <h2 className="text-3xl font-bold">Grade Calculator</h2>
+                <p className="text-xs italic font-bold text-pink-300">created with code & care — lindtsey</p>
+              </div>
+
               <p>
                 Enter your grades to calculate the score you need on the final examination to achieve your desired grade
                 point
               </p>
-              <p className="text-xs italic font-bold">created with code & care — lindtsey</p>
+              <div className="px-2 py-2 rounded-sm bg-base-100">
+                <p className="text-sm font-bold">--- indicates that the required grade is not achievable.</p>
+                <p className="text-sm font-bold">MGP stands for Maximum Grade Percentage achievable.</p>
+              </div>
             </div>
 
             <div className="p-4">
@@ -185,6 +203,21 @@ function App() {
           </div>
         </form>
 
+        {gradeNeededMatrix && gradeNeededMatrix["g3"]["min"].toFixed(2) < 100 && (
+          <div className="flex flex-col pl-4 gap-1 mb-4">
+            <label>Number of Items: {itemsNum}</label>
+            <input
+              type="range"
+              min={1}
+              max="100"
+              value={itemsNum}
+              onChange={(e) => setItemsNum(e.target.value)}
+              step="1"
+              className="range range-accent"
+            />
+          </div>
+        )}
+
         {gradeNeededMatrix && (
           <div className="font-bold pl-4">
             {gradeNeededMatrix["g3"]["min"].toFixed(2) < 0 ? (
@@ -192,11 +225,16 @@ function App() {
             ) : gradeNeededMatrix["g3"]["min"].toFixed(2) < 100 ? (
               <p>
                 You must achieve a minimum of{" "}
-                <span className="font-bold">{gradeNeededMatrix["g3"]["min"].toFixed(2)}%</span>
+                <span className="font-bold">
+                  {gradeNeededMatrix["g3"]["min"].toFixed(2)}% or{" "}
+                  {computeExamItemsNeeded(gradeNeededMatrix["g3"]["min"])} correct answers
+                </span>
                 &nbsp;in the Final Examination to pass this course.
               </p>
             ) : (
-              <p>You’ve already failed the course, regardless of your score on the Final Examination.</p>
+              <p className="text-red-500">
+                You’ve already failed the course, regardless of your score on the Final Examination.
+              </p>
             )}
           </div>
         )}
@@ -215,26 +253,40 @@ function App() {
                   <td>{gradeNeededMatrix[key]["point"]}</td>
                   <td>{`${gradeMatrix[key]["min"]} - ${gradeMatrix[key]["max"]}`}</td>
                   <td>
-                    {gradeNeededMatrix[key]["min"] > 100
-                      ? "---"
-                      : gradeNeededMatrix[key]["min"] < 0
-                      ? `${0.0}%`
-                      : `${gradeNeededMatrix[key]["min"].toFixed(2)}%`}
+                    {gradeNeededMatrix[key]["min"] > 100 ? (
+                      <p className="text-red-600 font-bold">---</p>
+                    ) : gradeNeededMatrix[key]["min"] < 0 ? (
+                      <p className="font-bold">0.00%</p>
+                    ) : (
+                      <p className="font-bold">
+                        {gradeNeededMatrix[key]["min"].toFixed(2)}%<br />
+                        <span className="text-xs font-medium">
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["min"].toFixed(2))} items
+                        </span>
+                      </p>
+                    )}
                   </td>
                   <td>
                     {gradeNeededMatrix[key]["min"] > 100 ? (
-                      "---"
+                      <p className="text-red-600 font-bold">---</p>
                     ) : gradeNeededMatrix[key]["max"] > 100 ? (
-                      <p>
-                        {computeGradeNeeded(computeMaximumGrade()).toFixed(2)}%<br />
+                      <p className="font-bold">
+                        {maxGradeNeeded?.toFixed(2)}%<br />
                         <span className="italic text-sm">
-                          {computeMaximumGrade().toFixed(2)} (Max Grade Percentage)
+                          {maxGradeAch?.toFixed(2)} (MGP)
+                          <br />
+                          <span className="text-xs  font-medium">{computeExamItemsNeeded(maxGradeNeeded)} items</span>
                         </span>
                       </p>
                     ) : gradeNeededMatrix[key]["max"] > 0 ? (
-                      `${gradeNeededMatrix[key]["max"].toFixed(2)}%`
+                      <p className="font-bold">
+                        {gradeNeededMatrix[key]["max"].toFixed(2)}%<br />
+                        <span className="text-xs font-medium">
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["max"].toFixed(2))} items
+                        </span>
+                      </p>
                     ) : (
-                      `${0.0}%`
+                      <p className="font-bold">0.00%</p>
                     )}
                   </td>
                 </tr>
