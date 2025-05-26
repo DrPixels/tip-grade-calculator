@@ -18,7 +18,7 @@ function App() {
   };
 
   const computeExamItemsNeeded = (percentage) => {
-    return Math.ceil((percentage / 100) * itemsNum);
+    return Math.ceil((percentage / 100) * itemsNum) > itemsNum ? itemsNum : Math.ceil((percentage / 100) * itemsNum);
   };
 
   const computeGradeNeeded = (targetGrade) => {
@@ -160,7 +160,7 @@ function App() {
               </p>
               <div className="px-2 py-2 rounded-sm bg-base-100">
                 <p className="text-sm font-bold">
-                  --- <span className="font-normal">indicates that the required grade is not achievable.</span>
+                  --- <span className="font-normal">indicates that the grade is not achievable.</span>
                 </p>
                 <p className="text-sm font-bold">
                   MGP <span className="font-normal">stands for Maximum Grade Percentage achievable.</span>
