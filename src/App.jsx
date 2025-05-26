@@ -244,7 +244,7 @@ function App() {
         )}
 
         {gradeNeededMatrix && gradeNeededMatrix["g3"]["min"].toFixed(2) < 100 && (
-          <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 m-4 px-4">
+          <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 m-4 px-4 pb-2">
             <table className="table ">
               <tr>
                 <th>Grade Point</th>
