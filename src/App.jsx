@@ -209,7 +209,7 @@ function App() {
 
         {gradeNeededMatrix && gradeNeededMatrix["g3"]["min"].toFixed(2) < 100 && (
           <div className="flex flex-col pl-4 gap-1 mb-4">
-            <label>Number of Items: {itemsNum}</label>
+            <label>Number of Exams Items: {itemsNum}</label>
             <input
               type="range"
               min={1}
@@ -231,7 +231,8 @@ function App() {
                 You must achieve a minimum of{" "}
                 <span className="font-bold">
                   {gradeNeededMatrix["g3"]["min"].toFixed(2)}% or{" "}
-                  {computeExamItemsNeeded(gradeNeededMatrix["g3"]["min"])} correct answers
+                  {computeExamItemsNeeded(gradeNeededMatrix["g3"]["min"])}
+                  {computeExamItemsNeeded(gradeNeededMatrix["g3"]["min"]) > 1 ? "correct answers" : "correct answer"}
                 </span>
                 &nbsp;in the Final Examination to pass this course.
               </p>
@@ -286,7 +287,8 @@ function App() {
                       <p className="font-bold">
                         {gradeNeededMatrix[key]["max"].toFixed(2)}%<br />
                         <span className="text-xs font-medium">
-                          {computeExamItemsNeeded(gradeNeededMatrix[key]["max"].toFixed(2))} items
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["max"].toFixed(2))}{" "}
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["max"].toFixed(2)) > 1 ? "items" : "item"}
                         </span>
                       </p>
                     ) : (
