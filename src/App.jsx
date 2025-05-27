@@ -152,6 +152,7 @@ function App() {
               <div>
                 <h2 className="text-3xl font-bold">Grade Calculator</h2>
                 <p className="text-xs italic font-bold text-pink-300">created with code & care — lindtsey</p>
+                <p className="text-xs font-bold ">Last modified: May 26, 2025</p>
               </div>
 
               <p>
