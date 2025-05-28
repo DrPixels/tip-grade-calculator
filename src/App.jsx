@@ -281,7 +281,10 @@ function App() {
                         <span className="italic text-sm">
                           {maxGradeAch?.toFixed(2)} (MGP)
                           <br />
-                          <span className="text-xs  font-medium">{computeExamItemsNeeded(maxGradeNeeded)} items</span>
+                          <span className="text-xs  font-medium">
+                            {computeExamItemsNeeded(maxGradeNeeded)}{" "}
+                            {computeExamItemsNeeded(maxGradeNeeded) > 1 ? "items" : "item"}
+                          </span>
                         </span>
                       </p>
                     ) : gradeNeededMatrix[key]["max"] > 0 ? (
