@@ -267,7 +267,8 @@ function App() {
                       <p className="font-bold">
                         {gradeNeededMatrix[key]["min"].toFixed(2)}%<br />
                         <span className="text-xs font-medium">
-                          {computeExamItemsNeeded(gradeNeededMatrix[key]["min"].toFixed(2))} items
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["min"].toFixed(2))}{" "}
+                          {computeExamItemsNeeded(gradeNeededMatrix[key]["min"].toFixed(2)) > 1 ? "items" : "item"}
                         </span>
                       </p>
                     )}
